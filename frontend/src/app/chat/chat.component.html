@@ -1,0 +1,35 @@
+<div class="chat-container">
+
+  <!-- SETUP SCREEN -->
+  <div *ngIf="step === 'SETUP'" class="setup-screen">
+    <h2>Anonymous Chat</h2>
+    <div class="input-group">
+      <input [(ngModel)]="displayName" placeholder="Enter your display name" (keydown.enter)="startMatching()"
+        maxlength="20" autofocus />
+      <button (click)="startMatching()" [disabled]="!displayName.trim()">Find Stranger</button>
+    </div>
+  </div>
+
+  <!-- CHAT SCREEN -->
+  <div *ngIf="step === 'CHATTING'" class="chat-screen">
+    <div class="status-bar">
+      {{ status }}
+      <button *ngIf="status === 'PARTNER DISCONNECTED'" (click)="startNewChat()" class="new-chat-btn">New Match</button>
+    </div>
+
+    <div class="messages" #scrollContainer>
+      <div *ngFor="let msg of messages" class="message-row"
+        [ngClass]="{'system': msg.system, 'self': msg.isSelf, 'stranger': !msg.isSelf && !msg.system}">
+        <span class="bubble" *ngIf="!msg.system">{{ msg.content }}</span>
+        <span class="system-text" *ngIf="msg.system">{{ msg.content }}</span>
+      </div>
+    </div>
+
+    <div class="input-area" *ngIf="isInRoom">
+      <input [(ngModel)]="inputMessage" (keydown)="onKeydown($event)" placeholder="Type a message..." maxlength="2000"
+        autofocus />
+      <button (click)="sendMessage()">Send</button>
+    </div>
+  </div>
+
+</div>
